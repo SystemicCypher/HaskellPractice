@@ -6,8 +6,8 @@
 -- where flattener = 
 
 flattener :: [[a]] -> [a]
-flattener (xs:xss) = xs : (flattener xss)
-flattener [] = []
+flattener (xs:xss) = xs : (flatter xss)
+where flatter xss = xss
 
 fibonacci :: Int -> [Int]
 fibonacci 0 = [1]
