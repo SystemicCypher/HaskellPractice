@@ -7,6 +7,7 @@
 
 flattener :: [[a]] -> [a]
 flattener (xs:xss) = xs : flattener xss
+flattener [] = []
 
 fibonacci :: Int -> [Int]
 fibonacci 0 = [1]
