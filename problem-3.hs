@@ -1,7 +1,7 @@
 --Problem 3
 
 flatMap :: (a -> [b]) -> [a] -> [b]
-flatMap g a:as = flattener(g a : flatMap g as )
+flatMap g (a:as) = flattener(g a : flatMap g as )
 flatMap g [] = []
 where flattener = 
 
