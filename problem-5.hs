@@ -9,9 +9,9 @@ foldRope f z (List xs) = subfold_f xs
           subfold_f [] = z
 foldRope f z (Concat l r) =  foldRope f (foldRope f z r) l
 
-unpackAndAdd :: Text -> String -> String
-unpackAndAdd x = (++) (unpack x)
+showAndAdd :: Int -> String -> String
+showAndAdd x = (++) (show x)
 
 main = do 
-    s <- getRope :: IO (Rope Text)
-    putStrLn $ foldRope (unpackAndAdd) "" s 
+    s <- getRope :: IO (Rope Int)
+    putStrLn $ foldRope (showAndAdd) "" s 

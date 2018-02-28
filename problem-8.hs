@@ -6,11 +6,14 @@ import Data.List.Split
 import Data.List
 import Data.Maybe
 
-mapReduce :: ((a, b) -> (c, d)) -> ((c, [d]) -> (c, d)) -> [(a, b)] -> [(c, d)]
-mapReduce f g z = Prelude.map g (Prelude.foldr grouping [] (Prelude.map f z))
+mapReduce :: (Eq c) => ((a, b) -> (c, d)) -> ((c, [d]) -> (c, d)) -> [(a, b)] -> [(c, d)]
+mapReduce f g z = Prelude.map g grouped
+    where lists = Prelude.map f z
+          grouped = Prelude.foldr grouping [] lists
 
-
-grouping :: (String, Int) -> [(String, [Int])] -> [(String, [Int])]
+--Just a helper function
+--Case sensitive though...not sure if it needs to be insensitive
+grouping :: (Eq c) => (c, d) -> [(c, [d])] -> [(c, [d])]
 grouping x z = 
     if (isJust indX)  
         then (fst splitList ++ [(fst x, (snd x) : (snd (Prelude.head (snd splitList))) )] ++ (Prelude.tail (snd splitList)))
@@ -19,6 +22,7 @@ grouping x z =
               indX = Data.List.findIndex (==(fst x)) zn
               zn = fst (unzip z)
               indeX = fromJust indX
+
 
 mapper :: (Text, Int) -> (String, Int)
 mapper t = (toString (fst t) ,(snd t)) --A little forced
@@ -42,8 +46,9 @@ pairer str = Prelude.foldr (doubleapp pair (:)) [] (splits str)
 
 --Not sure if needed, but it helps ^
 
-
+stringify :: (String, Int) -> String
+stringify (word, count) = "" ++ word ++ ": " ++ show count 
 
 main = do 
     s <- Data.Text.IO.getLine :: IO Text
-    print $ mapReduce mapper reducer (pairer s) 
+    Prelude.putStrLn $ Data.List.unlines ( Data.List.map stringify (mapReduce mapper reducer (pairer s))) 
